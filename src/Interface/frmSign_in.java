@@ -5,7 +5,6 @@
 package Interface;
 
 import Database.DatabaseHelper;
-
 import java.sql.ResultSet;
 import java.util.Vector;
 /**
@@ -149,8 +148,7 @@ public class frmSign_in extends javax.swing.JFrame {
         // TODO add your handling code here:
         String username = txt_username.getText();
         String password = new String(txt_password.getPassword());
-        System.out.println("user:" + username + password);
-        boolean check = login(username, "1234");
+        boolean check = login(username, password);
         if(check){
             javax.swing.JOptionPane.showMessageDialog(null, "Login successful!");
             setVisible(false);
