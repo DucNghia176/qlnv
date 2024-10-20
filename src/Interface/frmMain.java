@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Interface;
-
+import Proccess.User;
 /**
  *
  * @author Asus
@@ -11,11 +11,17 @@ package Interface;
 public class frmMain extends javax.swing.JFrame {
 
     /**
-     * Creates new form frmMain
+     * Creates new form frmMain1
      */
     public frmMain() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+    public void receiveData(User data) {
+        // Xử lý dữ liệu nhận được
+        System.out.println("username: " + data.username);
+        System.out.println("role: " + data.role);
+         this.jMenuBar1.setVisible(true);
     }
 
     /**
@@ -27,45 +33,105 @@ public class frmMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        bt_sign_in = new javax.swing.JButton();
-        bt_sign_up = new javax.swing.JButton();
-        bt_help = new javax.swing.JButton();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jDesktopPane2 = new javax.swing.JDesktopPane();
+        myDesktop = new javax.swing.JDesktopPane();
         jLabel1 = new javax.swing.JLabel();
+        btnSign_in = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jToggleButton3 = new javax.swing.JToggleButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu_file = new javax.swing.JMenu();
-        jMenuItem_sign_in = new javax.swing.JMenuItem();
-        jMenu_edit = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        Exit = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        bt_sign_in.setText("SIGN IN");
-        bt_sign_in.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText("HỆ THỐNG QUẢN LÝ NHÂN VIÊN");
+
+        btnSign_in.setText("SIGN IN");
+        btnSign_in.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bt_sign_inActionPerformed(evt);
+                btnSign_inActionPerformed(evt);
             }
         });
 
-        bt_sign_up.setText("SIGN UP");
+        jToggleButton2.setText("SIGN UP");
 
-        bt_help.setText("HELP");
+        jToggleButton3.setText("HELP");
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
-        jLabel1.setText("HỆ THỐNG QUẢN LÝ NHÂN VIÊN KHÁCH SẠN");
+        myDesktop.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        myDesktop.setLayer(btnSign_in, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        myDesktop.setLayer(jToggleButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        myDesktop.setLayer(jToggleButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jMenu_file.setText("File");
+        javax.swing.GroupLayout myDesktopLayout = new javax.swing.GroupLayout(myDesktop);
+        myDesktop.setLayout(myDesktopLayout);
+        myDesktopLayout.setHorizontalGroup(
+            myDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(myDesktopLayout.createSequentialGroup()
+                .addGroup(myDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(myDesktopLayout.createSequentialGroup()
+                        .addGap(295, 295, 295)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(myDesktopLayout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(myDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnSign_in, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(308, Short.MAX_VALUE))
+        );
+        myDesktopLayout.setVerticalGroup(
+            myDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(myDesktopLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel1)
+                .addGap(49, 49, 49)
+                .addComponent(btnSign_in, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(85, Short.MAX_VALUE))
+        );
 
-        jMenuItem_sign_in.setText("Sign in");
-        jMenuItem_sign_in.addActionListener(new java.awt.event.ActionListener() {
+        jDesktopPane2.setLayer(myDesktop, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopPane2Layout = new javax.swing.GroupLayout(jDesktopPane2);
+        jDesktopPane2.setLayout(jDesktopPane2Layout);
+        jDesktopPane2Layout.setHorizontalGroup(
+            jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(myDesktop)
+        );
+        jDesktopPane2Layout.setVerticalGroup(
+            jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(myDesktop)
+        );
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setText("Sign In");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_sign_inActionPerformed(evt);
+                jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu_file.add(jMenuItem_sign_in);
+        jMenu1.add(jMenuItem1);
 
-        jMenuBar1.add(jMenu_file);
+        Exit.setText("Exit");
+        Exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(Exit);
 
-        jMenu_edit.setText("Edit");
-        jMenuBar1.add(jMenu_edit);
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -74,42 +140,40 @@ public class frmMain extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(bt_help, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bt_sign_up, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                            .addComponent(bt_sign_in, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(jLabel1)))
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jDesktopPane2)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(bt_sign_in, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(bt_sign_up, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(bt_help, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jDesktopPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(339, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bt_sign_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_sign_inActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_bt_sign_inActionPerformed
+        frmSign_in frm =new frmSign_in(this);        
+        
+        myDesktop.add(frm);
+        frm.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jMenuItem_sign_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_sign_inActionPerformed
+    private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem_sign_inActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_ExitActionPerformed
+
+    private void btnSign_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSign_inActionPerformed
+        // TODO add your handling code here:
+        frmSign_in frm =new frmSign_in(this);        
+        myDesktop.add(frm);
+        frm.setVisible(true);
+    }//GEN-LAST:event_btnSign_inActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,6 +201,7 @@ public class frmMain extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(frmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -147,13 +212,17 @@ public class frmMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bt_help;
-    private javax.swing.JButton bt_sign_in;
-    private javax.swing.JButton bt_sign_up;
+    private javax.swing.JMenuItem Exit;
+    private javax.swing.JToggleButton btnSign_in;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem_sign_in;
-    private javax.swing.JMenu jMenu_edit;
-    private javax.swing.JMenu jMenu_file;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton jToggleButton3;
+    private javax.swing.JDesktopPane myDesktop;
     // End of variables declaration//GEN-END:variables
 }

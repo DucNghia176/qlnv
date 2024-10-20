@@ -7,19 +7,22 @@ package Interface;
 import Database.DatabaseHelper;
 import java.sql.ResultSet;
 import java.util.Vector;
+import javax.swing.JOptionPane;
+import Proccess.User;
 /**
  *
  * @author Asus
  */
-public class frmSign_in extends javax.swing.JFrame {
+public class frmSign_in extends javax.swing.JInternalFrame {
 
     /**
-     * Creates new form sign_in
+     * Creates new form frmLogin1
      */
-    public frmSign_in() {
-        initComponents();
+    private frmMain mainFrame;
+    public frmSign_in(frmMain mainFrame) {
+        initComponents();  
+        this.mainFrame = mainFrame;
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -135,6 +138,10 @@ public class frmSign_in extends javax.swing.JFrame {
             System.out.println("Kích thước của vector:" + v.size());
             if (v.size()>0) 
             {
+                User us=new User();
+                us.username=user;
+                us.role="admin";
+                mainFrame.receiveData(us);
                 return true;
             }                
             else return false;
@@ -150,7 +157,7 @@ public class frmSign_in extends javax.swing.JFrame {
         String password = new String(txt_password.getPassword());
         boolean check = login(username, password);
         if(check){
-            javax.swing.JOptionPane.showMessageDialog(null, "Login successful!");
+            JOptionPane.showMessageDialog(null, "Login successful!");
             setVisible(false);
             this.dispose();
         }else{
@@ -166,39 +173,6 @@ public class frmSign_in extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmSign_in.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmSign_in.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmSign_in.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmSign_in.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new frmSign_in().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_cancel;

@@ -6,8 +6,11 @@ package Proccess;
 
 /**
  *
- * @author Asus
+ * @author cuongdo
  */
-public class NewClass {
-    
+public class User {
+    public String username;
+    public String role;
+    // ... các thuộc tính khác
+    // Getter và setter
 }
