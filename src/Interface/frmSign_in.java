@@ -134,13 +134,13 @@ public class frmSign_in extends javax.swing.JInternalFrame {
         try {
             DatabaseHelper cn = new DatabaseHelper();
             Object[] argv = new Object[0];            
-            ResultSet resultSet = cn.selectQuery("select * from DANG_NHAP where TENDN='"+user+"' and MATKHAU='"+pass+"'", argv);
+            ResultSet resultSet = cn.selectQuery("select * from users where username='"+user+"' and password='"+pass+"'", argv);
             Vector v = new Vector();
              while (resultSet.next()) {
                     
-                    v.add(resultSet.getString("MADN")); // id
-                    v.add(resultSet.getString("TENDN"));// fullname
-                    v.add(resultSet.getString("MA_QUYEN")); // role   
+                    v.add(resultSet.getString("userId")); // id
+                    v.add(resultSet.getString("userName"));// fullname
+                    v.add(resultSet.getString("roleId")); // role   
                 }
             System.out.println("Kích thước của vector:" + v.size());
             if (v.size()>0) 

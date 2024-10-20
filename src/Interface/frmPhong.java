@@ -15,8 +15,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frmPhong extends javax.swing.JInternalFrame {
 
-    frmPhong(frmMain aThis) {
+    public frmPhong(frmMain aThis) {
         initComponents();
+        getPhong();
     }
 
     /**
@@ -30,43 +31,46 @@ public class frmPhong extends javax.swing.JInternalFrame {
             dt.setRowCount(0);
             DatabaseHelper cn = new DatabaseHelper();
             // Create a JTable model to store the retrieved data
-            System.out.println("Connected mySQL success");
+            System.out.println("Connected SQL Servers success");
+            
             Object[] argv = new Object[0];
-            try (ResultSet resultSet = cn.selectQuery("SELECT *  FROM PHONG", argv)) {
+            try (ResultSet resultSet = cn.selectQuery("SELECT *  FROM departments", argv)) {
                 // Create a JTable model to store the retrieved data
                 System.out.println("Ket noi ok" + resultSet);
                 while (resultSet.next()) {
                     Vector v = new Vector();
-                    v.add(resultSet.getString("MAPH")); // id
-                    v.add(resultSet.getString("TENPH"));// name    
-                    v.add(resultSet.getString("DIACHIPH")); // create_time                   
+                    v.add(resultSet.getString("deptId")); // id
+                    v.add(resultSet.getString("deptName"));// name                   
                     dt.addRow(v);
 
                 }
-
                 cn.close();
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi trong quá trình lấy dữ liệu: " + e.getMessage());
         }
 
     }   
     
     public int insertPhong() {
         // ID is Auto inc
-        String id = txtID.getText();
-        String name = txtName.getText();       
-        String address = txtAddress.getText();
-        Object[] argv = new Object[3];
+        String id = txtID.getText().trim();
+        String name = txtName.getText().trim();       
+             
+        if (id.isEmpty() || !id.matches("\\d+")) {
+        JOptionPane.showMessageDialog(null, "Vui lòng nhập mã phòng hợp lệ!");
+        return 0;
+        }
+        Object[] argv = new Object[2];
         argv[0] = Integer.parseInt(id);
-        argv[1] = name;
-        argv[2] = address;       
+        argv[1] = name; 
         
-      
         try {
 
             DatabaseHelper cn = new DatabaseHelper();
-            int rs = cn.executeQuery("INSERT INTO PHONG (MAPH,TENPH,DIACHIPH) VALUES (?,?,?)", argv);
+            int rs = cn.executeQuery("INSERT INTO departments (deptId,deptName) VALUES (?,?)", argv);
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Thêm mới thành công dữ liệu id:"+id);
                 clearText();
@@ -80,48 +84,72 @@ public class frmPhong extends javax.swing.JInternalFrame {
         }
 
     }
-    public int updatePhong() {
-        // ID is Auto inc
-         // ID is Auto inc
-         // ID is Auto inc
-        String id = txtID.getText();
-        String name = txtName.getText();       
-        String address = txtAddress.getText();
-        Object[] argv = new Object[3];        
-        argv[0] = name;
-        argv[1] = address;    
-        argv[2] = Integer.parseInt(id);
-       
-        try {
-            DatabaseHelper cn = new DatabaseHelper();
-            int rs = cn.executeQuery("UPDATE PHONG SET TENPH=?,DIACHIPH=? WHERE MAPH =?", argv);
-            if (rs > 0) {
-                JOptionPane.showMessageDialog(null, "Cập nhật thành công dữ liệu id:"+id);
-                clearText();
-            }
-            return rs;
+    private String[] getDataFromUI() {
+        
+    String id = txtID.getText().trim();  // Lấy và xóa khoảng trắng đầu/cuối
+    String name = txtName.getText().trim();
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Cập nhật thất bại dữ liệu id:"+id +", error detail:"+ e );                 
-            System.out.println(e);
-            return 0;
-        }
-
+    // Trả về mảng với các giá trị lấy từ giao diện
+    return new String[]{id, name};
     }
+
+    public void updatePhong() {
+        try {
+            String[] data = getDataFromUI();
+
+            if (data.length < 2) {
+                JOptionPane.showMessageDialog(null, "Dữ liệu không đủ để cập nhật!");
+                return;
+            }
+
+            int id = Integer.parseInt(data[0]);
+            String name = data[1];
+
+            DatabaseHelper cn = new DatabaseHelper();
+            Object[] params = {name, id};
+
+            int rs = cn.executeQuery("UPDATE departments SET deptName = ? WHERE deptId = ?", params);
+            if (rs > 0) {
+                JOptionPane.showMessageDialog(null, "Cập nhật thành công phòng có ID: " + id);
+                clearText();
+            } else {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy phòng với ID: " + id);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "ID không hợp lệ!");
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Lỗi trong quá trình cập nhật: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public int deletePhong() {
         // ID is Auto inc
         String id = txtID.getText();     
-        Object[] argv = new Object[1];
-        argv[0] = Integer.parseInt(id);
+        
+        if (id.isEmpty()) { // Kiểm tra xem ID có rỗng không
+        JOptionPane.showMessageDialog(null, "Vui lòng nhập mã phòng cần xóa!");
+        return 0;
+        }
+
         try {
+            int parsedId = Integer.parseInt(id); // Chuyển đổi ID thành số nguyên
+            Object[] argv = new Object[]{parsedId};
             DatabaseHelper cn = new DatabaseHelper();
-            int rs = cn.executeQuery("DELETE FROM PHONG WHERE MAPH =?", argv);
+            
+            int rs = cn.executeQuery("DELETE FROM departments WHERE deptId =?", argv);
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Xóa thành công dữ liệu id:"+id);
                 clearText();
             }            
             return rs;
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "ID không hợp lệ: " + id);
+        System.out.println(e);
+        return 0;
+        }
+        catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Xóa thất bại dữ liệu id:"+id +", error detail:"+ e );                 
             System.out.println(e);
             return 0;
@@ -130,9 +158,9 @@ public class frmPhong extends javax.swing.JInternalFrame {
     }
     public void clearText() {
         txtID.setText("");
-        txtName.setText("");
-        txtAddress.setText("");        
+        txtName.setText("");      
     }
+    
     public frmPhong() {
         initComponents();
         getPhong();
@@ -147,7 +175,6 @@ public class frmPhong extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtID = new javax.swing.JTextField();
@@ -155,7 +182,6 @@ public class frmPhong extends javax.swing.JInternalFrame {
         btnAdd = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
-        txtAddress = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbPhong = new javax.swing.JTable();
         btnUpdate = new javax.swing.JButton();
@@ -163,8 +189,6 @@ public class frmPhong extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setResizable(true);
-
-        jLabel4.setText("Địa chỉ");
 
         jLabel1.setText("Mã Phòng");
 
@@ -199,17 +223,17 @@ public class frmPhong extends javax.swing.JInternalFrame {
 
         tbPhong.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Mã Phòng", "Tên Phòng", "Địa chỉ"
+                "Mã Phòng", "Tên Phòng"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -243,46 +267,38 @@ public class frmPhong extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(95, 95, 95)
-                .addComponent(btnLoadData)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
-                .addComponent(btnAdd)
-                .addGap(72, 72, 72)
-                .addComponent(btnUpdate)
-                .addGap(62, 62, 62)
-                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(82, 82, 82)
-                .addComponent(btnExit)
-                .addGap(54, 54, 54))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(117, 117, 117)
-                        .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel4))
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1))
-                        .addGap(61, 61, 61)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtName)
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
+                .addGap(61, 61, 61)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtName)
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(344, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLoadData)
+                .addGap(80, 80, 80)
+                .addComponent(btnAdd)
+                .addGap(80, 80, 80)
+                .addComponent(btnUpdate)
+                .addGap(80, 80, 80)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(80, 80, 80)
+                .addComponent(btnExit)
+                .addGap(22, 22, 22))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 820, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(286, Short.MAX_VALUE)
+                .addContainerGap(209, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -290,22 +306,18 @@ public class frmPhong extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit)
                     .addComponent(btnUpdate)
                     .addComponent(btnDelete)
                     .addComponent(btnAdd)
                     .addComponent(btnLoadData))
-                .addContainerGap())
+                .addGap(56, 56, 56))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(40, 40, 40)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                     .addGap(194, 194, 194)))
         );
 
@@ -330,15 +342,15 @@ public class frmPhong extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void tbPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPhongMouseClicked
-        // TODO add your handling code here:
         //mouse click load text field to data
         int i = tbPhong.getSelectedRow();
+        if (i >= 0) {
         String id = tbPhong.getValueAt(i, 0).toString();
-        String name = tbPhong.getValueAt(i, 1).toString();   
-        String address = tbPhong.getValueAt(i, 2).toString();       
+        String name = tbPhong.getValueAt(i, 1).toString();
+
         txtID.setText(id);
-        txtName.setText(name);     
-        txtAddress.setText(address);        
+        txtName.setText(name);
+    }           
 
     }//GEN-LAST:event_tbPhongMouseClicked
 
@@ -366,10 +378,8 @@ public class frmPhong extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbPhong;
-    private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables

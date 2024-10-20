@@ -29,16 +29,20 @@ public class frmNhanvien extends javax.swing.JInternalFrame {
             dt.setRowCount(0);
             DatabaseHelper cn = new DatabaseHelper();
             // Create a JTable model to store the retrieved data
-            System.out.println("Connected mySQL success");
+            System.out.println("Connected SQL server success");
             Object[] argv = new Object[0];
-            try (ResultSet resultSet = cn.selectQuery("SELECT *  FROM NHANVIEN", argv)) {
+            try (ResultSet resultSet = cn.selectQuery("SELECT *  FROM employees", argv)) {
                 // Create a JTable model to store the retrieved data
                 System.out.println("Ket noi ok" + resultSet);
                 while (resultSet.next()) {
                     Vector v = new Vector();
-                    v.add(resultSet.getString("MAPH")); // id
-                    v.add(resultSet.getString("TENPH"));// name    
-                    v.add(resultSet.getString("DIACHIPH")); // create_time                   
+                    v.add(resultSet.getString("empId")); // id
+                    v.add(resultSet.getString("fName"));// name    
+                    v.add(resultSet.getString("lName")); // create_time      
+                    v.add(resultSet.getString("dob")); 
+                    v.add(resultSet.getString("gender")); 
+                    v.add(resultSet.getString("email")); 
+                    v.add(resultSet.getString("phone")); 
                     dt.addRow(v);
 
                 }

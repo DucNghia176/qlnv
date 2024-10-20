@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class DatabaseHelper {
       // Step 1: Setup the connection parameters
      // Step 1: Setup the connection parameters
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=QUANLYNHANVIEN";
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=qlnv";
     private static final String USER = "sa";
     private static final String PASSWORD = "12345";
     
