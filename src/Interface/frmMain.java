@@ -85,9 +85,9 @@ public class frmMain extends javax.swing.JFrame {
                             .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)))
                     .addGroup(myDesktopLayout.createSequentialGroup()
-                        .addGap(250, 250, 250)
+                        .addGap(334, 334, 334)
                         .addComponent(jLabel1)))
-                .addGap(262, 262, 262))
+                .addContainerGap(335, Short.MAX_VALUE))
         );
         myDesktopLayout.setVerticalGroup(
             myDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,7 +102,7 @@ public class frmMain extends javax.swing.JFrame {
                 .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         jMenu1.setText("File");
@@ -159,10 +159,7 @@ public class frmMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(myDesktop)
-                .addContainerGap())
+            .addComponent(myDesktop)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -197,6 +198,8 @@ public class frmPhong extends javax.swing.JInternalFrame {
         tbPhong = new javax.swing.JTable();
 
         setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
         setResizable(true);
 
         btnExit.setText("Thoát");
@@ -394,20 +397,17 @@ public class frmPhong extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2)))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(260, 260, 260)
                 .addComponent(btnLoadData)
                 .addGap(84, 84, 84)
                 .addComponent(btnExit)
-                .addContainerGap(287, Short.MAX_VALUE))
+                .addContainerGap(296, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,7 +420,7 @@ public class frmPhong extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit)
                     .addComponent(btnLoadData))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         pack();
@@ -439,21 +439,24 @@ public class frmPhong extends javax.swing.JInternalFrame {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-        deletePhong();
+        int confirm = JOptionPane.showConfirmDialog(null, 
+        "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận", 
+        JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            deletePhong();
+        }
         getPhong();
     }//GEN-LAST:event_btnDeleteActionPerformed
-
+ 
     private void tbPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPhongMouseClicked
         //mouse click load text field to data
         int i = tbPhong.getSelectedRow();
-        if (i >= 0) {
-        String id = tbPhong.getValueAt(i, 0).toString();
-        String name = tbPhong.getValueAt(i, 1).toString();
-
-        txtID1.setText(id);
-        txtName1.setText(name);
-    }           
-
+        if (i >= 0 && tbPhong.getValueAt(i, 0) != null) {
+            String id = tbPhong.getValueAt(i, 0).toString();
+            String name = tbPhong.getValueAt(i, 1).toString();
+            txtID1.setText(id);
+            txtName1.setText(name);
+        }
     }//GEN-LAST:event_tbPhongMouseClicked
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
