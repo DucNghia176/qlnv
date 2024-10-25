@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package Interface;
+
 import Database.DatabaseHelper;
 import java.sql.ResultSet;
 import java.util.Vector;
@@ -10,6 +11,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author MY PC
@@ -24,7 +26,7 @@ public class frmPhong extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmPhong
      */
-     public void getPhong() {
+    public void getPhong() {
 
         try {
 
@@ -33,7 +35,7 @@ public class frmPhong extends javax.swing.JInternalFrame {
             DatabaseHelper cn = new DatabaseHelper();
             // Create a JTable model to store the retrieved data
             System.out.println("Connected SQL Servers success");
-            
+
             Object[] argv = new Object[0];
             try (ResultSet resultSet = cn.selectQuery("SELECT *  FROM departments", argv)) {
                 // Create a JTable model to store the retrieved data
@@ -53,45 +55,46 @@ public class frmPhong extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Lỗi trong quá trình lấy dữ liệu: " + e.getMessage());
         }
 
-    }   
-    
+    }
+
     public int insertPhong() {
         // ID is Auto inc
         String id = txtID.getText().trim();
-        String name = txtName.getText().trim();       
-             
+        String name = txtName.getText().trim();
+
         if (id.isEmpty() || !id.matches("\\d+")) {
-        JOptionPane.showMessageDialog(null, "Vui lòng nhập mã phòng hợp lệ!");
-        return 0;
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã phòng hợp lệ!");
+            return 0;
         }
         Object[] argv = new Object[2];
         argv[0] = Integer.parseInt(id);
-        argv[1] = name; 
-        
+        argv[1] = name;
+
         try {
 
             DatabaseHelper cn = new DatabaseHelper();
             int rs = cn.executeQuery("INSERT INTO departments (deptId,deptName) VALUES (?,?)", argv);
             if (rs > 0) {
-                JOptionPane.showMessageDialog(null, "Thêm mới thành công dữ liệu id:"+id);
+                JOptionPane.showMessageDialog(null, "Thêm mới thành công dữ liệu id:" + id);
                 clearText();
             }
             return rs;
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Thêm mới thất bại dữ liệu id:"+id+ e);                
+            JOptionPane.showMessageDialog(null, "Thêm mới thất bại dữ liệu id:" + id + e);
             System.out.println(e);
             return 0;
         }
 
     }
-    private String[] getDataFromUI() {
-        
-    String id = txtID.getText().trim();  // Lấy và xóa khoảng trắng đầu/cuối
-    String name = txtName.getText().trim();
 
-    // Trả về mảng với các giá trị lấy từ giao diện
-    return new String[]{id, name};
+    private String[] getDataFromUI() {
+
+        String id = txtID.getText().trim();  // Lấy và xóa khoảng trắng đầu/cuối
+        String name = txtName.getText().trim();
+
+        // Trả về mảng với các giá trị lấy từ giao diện
+        return new String[]{id, name};
     }
 
     public void updatePhong() {
@@ -105,6 +108,11 @@ public class frmPhong extends javax.swing.JInternalFrame {
 
             int id = Integer.parseInt(data[0]);
             String name = data[1];
+
+            if (data[0].isEmpty()) {
+                JOptionPane.showMessageDialog(null, "ID không được để trống!");
+                return;
+            }
 
             DatabaseHelper cn = new DatabaseHelper();
             Object[] params = {name, id};
@@ -127,41 +135,40 @@ public class frmPhong extends javax.swing.JInternalFrame {
 
     public int deletePhong() {
         // ID is Auto inc
-        String id = txtID.getText();     
-        
+        String id = txtID.getText();
+
         if (id.isEmpty()) { // Kiểm tra xem ID có rỗng không
-        JOptionPane.showMessageDialog(null, "Vui lòng nhập mã phòng cần xóa!");
-        return 0;
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã phòng cần xóa!");
+            return 0;
         }
 
         try {
             int parsedId = Integer.parseInt(id); // Chuyển đổi ID thành số nguyên
             Object[] argv = new Object[]{parsedId};
             DatabaseHelper cn = new DatabaseHelper();
-            
+
             int rs = cn.executeQuery("DELETE FROM departments WHERE deptId =?", argv);
             if (rs > 0) {
-                JOptionPane.showMessageDialog(null, "Xóa thành công dữ liệu id:"+id);
+                JOptionPane.showMessageDialog(null, "Xóa thành công dữ liệu id:" + id);
                 clearText();
-            }            
+            }
             return rs;
         } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "ID không hợp lệ: " + id);
-        System.out.println(e);
-        return 0;
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Xóa thất bại dữ liệu id:"+id +", error detail:"+ e );                 
+            JOptionPane.showMessageDialog(null, "ID không hợp lệ: " + id);
+            System.out.println(e);
+            return 0;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Xóa thất bại dữ liệu id:" + id + ", error detail:" + e);
             System.out.println(e);
             return 0;
         }
-
     }
+
     public void clearText() {
         txtID.setText("");
-        txtName.setText("");      
+        txtName.setText("");
     }
-    
+
     public frmPhong() {
         initComponents();
         getPhong();
@@ -176,7 +183,6 @@ public class frmPhong extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnExit = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbPhong = new javax.swing.JTable();
@@ -196,15 +202,10 @@ public class frmPhong extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
 
-        btnExit.setText("Thoát");
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-
         tbPhong.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null},
+                {null, null},
                 {null, null},
                 {null, null},
                 {null, null},
@@ -284,7 +285,7 @@ public class frmPhong extends javax.swing.JInternalFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtName)
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 288, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLoadData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -337,10 +338,6 @@ public class frmPhong extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(420, 420, 420)
-                .addComponent(btnExit)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane2)
         );
@@ -349,10 +346,8 @@ public class frmPhong extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExit)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -364,22 +359,17 @@ public class frmPhong extends javax.swing.JInternalFrame {
         getPhong();
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // TODO add your handling code here:
-       this.dispose();
-    }//GEN-LAST:event_btnExitActionPerformed
-
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-        int confirm = JOptionPane.showConfirmDialog(null, 
-        "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận", 
-        JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null,
+                "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             deletePhong();
         }
         getPhong();
     }//GEN-LAST:event_btnDeleteActionPerformed
- 
+
     private void tbPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPhongMouseClicked
         //mouse click load text field to data
         int i = tbPhong.getSelectedRow();
@@ -393,7 +383,7 @@ public class frmPhong extends javax.swing.JInternalFrame {
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
-         updatePhong();
+        updatePhong();
         getPhong();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -410,7 +400,6 @@ public class frmPhong extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnLoadData;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel2;

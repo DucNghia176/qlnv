@@ -191,7 +191,7 @@ public class frmMain extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        frmNhanvien frm = new frmNhanvien(this);
+        frmNhanVien frm = new frmNhanVien(this);
         myDesktop.add(frm);
         frm.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
