@@ -21,7 +21,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmNhanvien1
      */
-    public frmNhanVien() {
+    frmNhanVien(frmMain aThis) {
         initComponents();
         getNhanVien();
         loadDepartmentsToComboBox();
@@ -236,11 +236,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         boxPhong.setSelectedIndex(0);
     }
 
-    frmNhanVien(frmMain aThis) {
+    public frmNhanVien() {
         initComponents();
-        loadDepartmentsToComboBox();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -402,7 +401,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                             .addComponent(txtLuong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(boxPhong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 97, Short.MAX_VALUE)
+                        .addGap(0, 101, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addGap(97, 97, 97)
                         .addComponent(btThem)
