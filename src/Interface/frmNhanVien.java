@@ -73,9 +73,9 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             while (resultSet.next()) {
-                String depId = resultSet.getString("deptId");
+                String deptId = resultSet.getString("deptId");
                 String deptName = resultSet.getString("deptName");
-                model.addElement(depId + " - " + deptName);
+                model.addElement(deptId + " - " + deptName);
             }
 
             boxPhong.setModel(model);
@@ -94,10 +94,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String phone = txtPhone.getText().trim();
         String pos = txtChucvu.getText().trim();
         String sal = txtLuong.getText().trim();
-        String depId = boxPhong.getSelectedItem().toString();
+        String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];;
 
         // Kiểm tra nếu các trường không được để trống
-        if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || pos.isEmpty() || sal.isEmpty() || depId.isEmpty()) {
+        if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || pos.isEmpty() || sal.isEmpty() || deptId.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return 0;
         }
@@ -112,13 +112,13 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         argv[5] = phone;
         argv[6] = pos;
         argv[7] = sal;
-        argv[8] = depId;
+        argv[8] = deptId;
 
         try {
             // Tạo kết nối tới cơ sở dữ liệu
             DatabaseHelper cn = new DatabaseHelper();
             // Thực hiện câu truy vấn chèn dữ liệu vào bảng employees
-            int rs = cn.executeQuery("INSERT INTO employees (empId, name, dob, gender, email, phone, pos, sal, depId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", argv);
+            int rs = cn.executeQuery("INSERT INTO employees (empId, name, dob, gender, email, phone, pos, sal, deptId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", argv);
 
             // Kiểm tra xem dữ liệu đã được chèn thành công chưa
             if (rs > 0) {
@@ -143,10 +143,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String phone = txtPhone.getText().trim();
         String pos = txtChucvu.getText().trim();
         String sal = txtLuong.getText().trim();
-        String depId = boxPhong.getSelectedItem().toString();
+        String deptId = boxPhong.getSelectedItem().toString();
 
         // Trả về mảng với các giá trị lấy từ giao diện
-        return new String[]{id, name, dob, gender, email, phone, pos, sal, depId};
+        return new String[]{id, name, dob, gender, email, phone, pos, sal, deptId};
     }
 
     public void updateNhanVien() {
@@ -170,12 +170,12 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             String phone = data[5];
             String pos = data[6];
             String sal = data[7];
-            String depId = data[8];
+            String deptId = data[8];
 
             DatabaseHelper cn = new DatabaseHelper();
-            Object[] params = {name, dob, gender, email, phone, pos, sal, depId, id};
+            Object[] params = {name, dob, gender, email, phone, pos, sal, deptId, id};
 
-            int rs = cn.executeQuery("UPDATE employees SET name = ?, dob = ?, gender = ?, email = ?, phone = ?, pos = ?, sal = ?, depId =? WHERE empId = ?", params);
+            int rs = cn.executeQuery("UPDATE employees SET name = ?, dob = ?, gender = ?, email = ?, phone = ?, pos = ?, sal = ?, deptId =? WHERE empId = ?", params);
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Cập nhật thành công phòng có ID: " + id);
                 clearText();
