@@ -350,7 +350,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
         jLabel9.setText("Phòng ban: ");
 
-        boxPhong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        boxPhong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {""}));
         boxPhong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 boxPhongActionPerformed(evt);
