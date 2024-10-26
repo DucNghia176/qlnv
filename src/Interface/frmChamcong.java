@@ -8,12 +8,12 @@ package Interface;
  *
  * @author MY PC
  */
-public class frmDuAn extends javax.swing.JInternalFrame {
+public class frmChamcong extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form frmDuAn
      */
-    public frmDuAn() {
+    public frmChamcong() {
         initComponents();
     }
 

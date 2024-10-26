@@ -14,16 +14,22 @@ import javax.swing.event.InternalFrameEvent;
  *
  * @author Asus
  */
-public class frmSign_in extends javax.swing.JInternalFrame {
+public class frmSignIn extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form frmLogin1
      */
     private frmMain mainFrame;
-    public frmSign_in(frmMain mainFrame) {
-        initComponents();  
+    
+    public frmSignIn(frmMain mainFrame) {
         this.mainFrame = mainFrame;
+        initComponents();
     }
+
+    frmSignIn() {
+        initComponents();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -167,7 +173,7 @@ public class frmSign_in extends javax.swing.JInternalFrame {
              while (resultSet.next()) {
                     
                     v.add(resultSet.getString("userId")); // id
-                    v.add(resultSet.getString("userName"));// fullname
+                    v.add(resultSet.getString("username"));// fullname
                     v.add(resultSet.getString("roleId")); // role   
                 }
             System.out.println("Kích thước của vector:" + v.size());

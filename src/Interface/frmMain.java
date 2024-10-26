@@ -4,6 +4,7 @@
  */
 package Interface;
 import Proccess.User;
+import javax.swing.JDesktopPane;
 /**
  *
  * @author Asus
@@ -174,6 +175,10 @@ public class frmMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public JDesktopPane getMyDesktop() {
+        return myDesktop;
+    }
+    
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         frmSignIn frm =new frmSignIn(this);        
@@ -199,6 +204,7 @@ public class frmMain extends javax.swing.JFrame {
         frmNhanVien frm = new frmNhanVien(this);
         myDesktop.add(frm);
         frm.setVisible(true);
+        frm.moveToFront();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
