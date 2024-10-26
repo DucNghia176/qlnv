@@ -95,7 +95,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String phone = txtPhone.getText().trim();
         String pos = txtChucvu.getText().trim();
         String sal = txtLuong.getText().trim();
-        String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];;
+        String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
 
         // Kiểm tra nếu các trường không được để trống
         if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || pos.isEmpty() || sal.isEmpty() || deptId.isEmpty()) {
@@ -113,7 +113,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         argv[5] = phone;
         argv[6] = pos;
         argv[7] = sal;
-        argv[8] = deptId;
+        argv[8] = deptId.split(" - ")[0];
 
         try {
             // Tạo kết nối tới cơ sở dữ liệu
@@ -144,7 +144,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String phone = txtPhone.getText().trim();
         String pos = txtChucvu.getText().trim();
         String sal = txtLuong.getText().trim();
-        String deptId = boxPhong.getSelectedItem().toString();
+        String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
 
         // Trả về mảng với các giá trị lấy từ giao diện
         return new String[]{id, name, dob, gender, email, phone, pos, sal, deptId};
@@ -519,8 +519,30 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         if (i >= 0 && tbNhanvien.getValueAt(i, 0) != null) {
             String id = tbNhanvien.getValueAt(i, 0).toString();
             String name = tbNhanvien.getValueAt(i, 1).toString();
+            String dob = tbNhanvien.getValueAt(i, 2).toString();
+            String gender = tbNhanvien.getValueAt(i, 3).toString();
+            String email = tbNhanvien.getValueAt(i, 4).toString();
+            String phone = tbNhanvien.getValueAt(i, 5).toString();
+            String pos = tbNhanvien.getValueAt(i, 6).toString();
+            String sal = tbNhanvien.getValueAt(i, 7).toString();
+            String deptId = tbNhanvien.getValueAt(i, 8).toString();
+
+            // Cập nhật các trường trong UI
             txtId.setText(id);
             txtName.setText(name);
+            txtDate.setText(dob);
+            boxGT.setSelectedItem(gender); // Giả sử cbGender là JComboBox cho gender
+            txtEmail.setText(email);
+            txtPhone.setText(phone);
+            txtChucvu.setText(pos);
+            txtLuong.setText(sal);
+            for (int j = 0; j < boxPhong.getItemCount(); j++) {
+                String item = boxPhong.getItemAt(j).toString();
+                if (item.startsWith(deptId + " - ")) { // Kiểm tra xem ID có trùng với mục không
+                    boxPhong.setSelectedIndex(j); // Chọn mục tương ứng
+                    break; // Thoát khỏi vòng lặp sau khi tìm thấy
+                }
+            }
         }
     }//GEN-LAST:event_tbNhanvienMouseClicked
 

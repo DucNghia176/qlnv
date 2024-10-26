@@ -71,6 +71,7 @@ public class frmSignUp extends javax.swing.JInternalFrame {
             int rs = cn.executeQuery("INSERT INTO users (userId,username,password,empId) VALUES (?,?,?,?)", argv);
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Tạo tài khoản thành công");
+                this.dispose();
             }
             return rs;
 
