@@ -24,6 +24,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     public frmNhanVien() {
         initComponents();
         getNhanVien();
+        loadDepartmentsToComboBox();
     }
 
     public void getNhanVien() {
