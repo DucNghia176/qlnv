@@ -62,6 +62,11 @@ public class frmMain extends javax.swing.JFrame {
         });
 
         jToggleButton2.setText("SIGN UP");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         jToggleButton3.setText("HELP");
 
@@ -171,7 +176,7 @@ public class frmMain extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        frmSign_in frm =new frmSign_in(this);        
+        frmSignIn frm =new frmSignIn(this);        
         
         myDesktop.add(frm);
         frm.setVisible(true);
@@ -184,7 +189,7 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnSign_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSign_inActionPerformed
         // TODO add your handling code here:
-        frmSign_in frm =new frmSign_in(this);        
+        frmSignIn frm =new frmSignIn(this);        
         myDesktop.add(frm);
         frm.setVisible(true);
     }//GEN-LAST:event_btnSign_inActionPerformed
@@ -207,6 +212,13 @@ public class frmMain extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+        frmSignUp frm = new frmSignUp(this);
+        myDesktop.add(frm);
+        frm.setVisible(true);
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments
