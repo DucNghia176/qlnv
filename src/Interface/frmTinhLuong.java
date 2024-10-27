@@ -27,7 +27,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
             System.out.println("Connected to SQL server successfully");
             Object[] argv = new Object[0];
 
-            try (ResultSet resultSet = cn.selectQuery("SELECT p.payId, p.empId, e.fullName, p.amount, p.payDate, d.deptName "
+            try (ResultSet resultSet = cn.selectQuery("SELECT p.payId, p.empId, e.name, p.amount, p.payDate, d.deptName "
                     + "FROM payroll p "
                     + "JOIN employees e ON p.empId = e.empId "
                     + "JOIN departments d ON e.deptId = d.deptId", argv)) {
@@ -35,7 +35,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
                     Vector v = new Vector();
                     v.add(resultSet.getString("payId"));   // Mã lương
                     v.add(resultSet.getString("empId"));   // Mã nhân viên
-                    v.add(resultSet.getString("fullName")); // Tên nhân viên
+                    v.add(resultSet.getString("name"));    // Tên nhân viên
                     v.add(resultSet.getString("amount"));   // Số tiền lương
                     v.add(resultSet.getString("payDate"));  // Ngày trả lương
                     v.add(resultSet.getString("deptName")); // Tên phòng ban
@@ -50,48 +50,57 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
     }
 
     //  Lấy dữ liệu nhân viên từ cơ sở dữ liệu cho ComboBox mã nhân viên
-    public void loadEmployeeIdsToComboBox() {
-        try {
-            DatabaseHelper cn = new DatabaseHelper();
-            ResultSet resultSet = cn.selectQuery("SELECT empId, name FROM employees", new Object[0]);
-
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            while (resultSet.next()) {
-                String empId = resultSet.getString("empId");
-                String empName = resultSet.getString("name");
-                model.addElement(empId + " - " + empName);
-            }
-
-            // Thiết lập model cho ComboBox mã nhân viên
-            cbIDNhanVien.setModel(model);
-
-            // Đóng kết nối
-            cn.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Lỗi tải dữ liệu nhân viên: " + e.getMessage());
-        }
-    }
-
+//    public void loadEmployeeIdsToComboBox() {
+//        try {
+//            DatabaseHelper cn = new DatabaseHelper();
+//            ResultSet resultSet = cn.selectQuery("SELECT empId, name FROM employees", new Object[0]);
+//
+//            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+//            while (resultSet.next()) {
+//                String empId = resultSet.getString("empId");
+//                String empName = resultSet.getString("name");
+//                model.addElement(empId + " - " + empName);
+//            }
+//
+//            // Thiết lập model cho ComboBox mã nhân viên
+//            cbIDNhanVien.setModel(model);
+//
+//            // Đóng kết nối
+//            cn.close();
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(null, "Lỗi tải dữ liệu nhân viên: " + e.getMessage());
+//        }
+//    }
     /**
      * Creates new form frmTinhLuong
      */
     public frmTinhLuong() {
         initComponents();
         getPayrollData();
-        loadEmployeeIdsToComboBox();
     }
 
     // Hàm insert
     public int insertTinhLuong() {
-        String empId = cbIDNhanVien.getSelectedItem().toString();  // Lấy mã nhân viên từ ComboBox
+        // Lấy mã nhân viên từ JTextField
+        String empId = txtIDNhanVien.getText().trim();
         String payDate = txtNgayTraLuong.getText().trim();
         String amount = txtTienLuong.getText().trim();
 
+        // Kiểm tra xem các trường nhập liệu có bị bỏ trống không
         if (empId.isEmpty() || payDate.isEmpty() || amount.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return 0;
         }
 
+        // Kiểm tra xem amount có phải là số hợp lệ không
+        try {
+            Double.parseDouble(amount); // Chuyển đổi để kiểm tra
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Số tiền lương không hợp lệ! Vui lòng nhập lại.");
+            return 0;
+        }
+
+        // Câu lệnh SQL để thêm mới dữ liệu vào bảng payroll
         Object[] argv = {empId, payDate, amount};
         try {
             DatabaseHelper cn = new DatabaseHelper();
@@ -110,7 +119,8 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
 
     // Phương thức clearPayrollText để xóa các trường nhập liệu sau khi thêm thành công
     private void clearPayrollText() {
-        cbIDNhanVien.setSelectedIndex(0); // Đặt lại ComboBox về vị trí đầu tiên
+        // cbIDNhanVien.setSelectedIndex(0); // Đặt lại ComboBox về vị trí đầu tiên
+        txtIDNhanVien.setText("");
         txtNgayTraLuong.setText("");         // Xóa ngày trả lương
         txtTienLuong.setText("");          // Xóa số tiền lương
     }
@@ -119,7 +129,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
     public int updateTinhLuong() {
         // Lấy dữ liệu từ các trường nhập liệu
         String payId = txtID.getText().trim();  // Mã lương
-        String empId = cbIDNhanVien.getSelectedItem().toString(); // Mã nhân viên từ ComboBox
+        String empId = txtIDNhanVien.getText().trim(); // Mã nhân viên từ JTextField
         String payDate = txtNgayTraLuong.getText().trim(); // Ngày trả lương
         String amount = txtTienLuong.getText().trim(); // Số tiền lương
 
@@ -156,6 +166,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
             return 0;
         }
 
+        // Xác nhận xóa bản ghi
         int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa bản ghi này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return 0; // Nếu người dùng không xác nhận, thoát hàm
@@ -179,33 +190,38 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
         }
     }
 
+    // Hàm Tìm kiếm 
     public void searchPayrollData() {
-        String searchCriteria = cbIDNhanVien.getSelectedItem().toString(); // Có thể chọn mã nhân viên từ ComboBox
+        String empId = txtIDNhanVien.getText().trim(); // Lấy mã nhân viên từ trường văn bản
 
         try {
             DefaultTableModel dt = (DefaultTableModel) tbTinhLuong.getModel();
-            dt.setRowCount(0);
+            dt.setRowCount(0); // Xóa dữ liệu cũ trong bảng
 
             DatabaseHelper cn = new DatabaseHelper();
-            Object[] argv = {searchCriteria}; // Sử dụng tiêu chí tìm kiếm
 
-            try (ResultSet resultSet = cn.selectQuery("SELECT p.payId, p.empId, e.fullName, p.amount, p.payDate, d.deptName "
+            // Câu truy vấn SQL
+            String query = "SELECT p.payId, p.empId, e.name, p.amount, p.payDate, d.deptName "
                     + "FROM payroll p "
                     + "JOIN employees e ON p.empId = e.empId "
                     + "JOIN departments d ON e.deptId = d.deptId "
-                    + "WHERE e.empId = ? OR e.fullName LIKE ?", argv)) {
+                    + "WHERE e.empId = ? OR e.name LIKE ?";
+
+            Object[] argv = {empId, "%" + empId + "%"}; // Sử dụng % để tìm kiếm tên nhân viên
+
+            try (ResultSet resultSet = cn.selectQuery(query, argv)) {
                 while (resultSet.next()) {
-                    Vector v = new Vector();
+                    Vector<Object> v = new Vector<>();
                     v.add(resultSet.getString("payId"));   // Mã lương
                     v.add(resultSet.getString("empId"));   // Mã nhân viên
-                    v.add(resultSet.getString("fullName")); // Tên nhân viên
+                    v.add(resultSet.getString("name"));     // Tên nhân viên
                     v.add(resultSet.getString("amount"));   // Số tiền lương
                     v.add(resultSet.getString("payDate"));  // Ngày trả lương
                     v.add(resultSet.getString("deptName")); // Tên phòng ban
                     dt.addRow(v);
                 }
-                cn.close();
             }
+            cn.close(); // Đóng kết nối
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Lỗi khi tìm kiếm dữ liệu lương: " + e.getMessage());
@@ -228,7 +244,6 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
         txtTienLuong = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtNgayTraLuong = new javax.swing.JTextField();
-        cbIDNhanVien = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -237,6 +252,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
         txtPhongBan = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtID = new javax.swing.JTextField();
+        txtIDNhanVien = new javax.swing.JTextField();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
@@ -287,8 +303,6 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Ngày trả lương");
 
-        cbIDNhanVien.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel5.setText("Tên nhân viên");
 
         jLabel6.setText("Phòng ban");
@@ -310,8 +324,8 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtID)
-                    .addComponent(cbIDNhanVien, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(txtIDNhanVien))
                 .addGap(63, 63, 63)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -346,9 +360,9 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
                     .addComponent(txtNgayTraLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbIDNhanVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(txtPhongBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPhongBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIDNhanVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -416,12 +430,13 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd)
-                    .addComponent(btnRefresh)
-                    .addComponent(btnSearch)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelete))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnAdd)
+                        .addComponent(btnRefresh)
+                        .addComponent(btnSearch)
+                        .addComponent(btnDelete)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -442,7 +457,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
             String payDate = tbTinhLuong.getValueAt(i, 4).toString();       // Ngày trả lương
             String deptName = tbTinhLuong.getValueAt(i, 5).toString();      // Phòng ban
 
-            // Đặt mã nhân viên vào trường txtID
+            // Đặt mã lương vào trường txtID
             txtID.setText(payId);
 
             // Đặt ngày trả lương và số tiền lương
@@ -453,16 +468,8 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
             txtNameNhanVien.setText(empName);
             txtPhongBan.setText(deptName);
 
-            // Duyệt qua các mục trong ComboBox để chọn đúng mã nhân viên
-            for (int j = 0; j < cbIDNhanVien.getItemCount(); j++) {
-                String item = cbIDNhanVien.getItemAt(j).toString();
-
-                // Kiểm tra nếu mã nhân viên trong ComboBox khớp với mã từ bảng
-                if (item.startsWith(empId + " -")) {
-                    cbIDNhanVien.setSelectedIndex(j);
-                    break;
-                }
-            }
+            // Đặt mã nhân viên vào trường txtIDNhanVien
+            txtIDNhanVien.setText(empId);
         }
     }//GEN-LAST:event_tbTinhLuongMouseClicked
 
@@ -501,7 +508,6 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JComboBox<String> cbIDNhanVien;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -513,6 +519,7 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tbTinhLuong;
     private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtIDNhanVien;
     private javax.swing.JTextField txtNameNhanVien;
     private javax.swing.JTextField txtNgayTraLuong;
     private javax.swing.JTextField txtPhongBan;
