@@ -51,7 +51,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                     v.add(resultSet.getString("gender")); // Giới tính
                     v.add(resultSet.getString("email"));  // Email
                     v.add(resultSet.getString("phone"));  // Số điện thoại
-                    v.add(resultSet.getString("pos"));    // Chức vụ
+                    v.add(resultSet.getString("posId"));    // Chức vụ
                     v.add(resultSet.getString("sal"));  //lương
                     v.add(resultSet.getString("deptId"));  //mã phòng
                     // Thêm hàng vào mô hình của jTable1
@@ -84,6 +84,24 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Lỗi tải dữ liệu phòng: " + e.getMessage());
         }
     }
+    
+    public void loadPositions() { //lấy ra từ chuc vu
+        try {
+            DatabaseHelper cn = new DatabaseHelper();
+            ResultSet resultSet = cn.selectQuery("SELECT posId, posName FROM positions", new Object[0]);
+
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            while (resultSet.next()) {
+                String posId = resultSet.getString("posId");
+                String posName = resultSet.getString("posName");
+                model.addElement(posId + " - " + posName);
+            }
+
+            boxChucVu.setModel(model);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Lỗi tải dữ liệu chức vụ: " + e.getMessage());
+        }
+    }
 
     public int insertNhanVien() {
         // ID is Auto inc
@@ -93,12 +111,12 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String gender = boxGT.getSelectedItem().toString();
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
-        String pos = txtChucvu.getText().trim();
+        String posId = boxChucVu.getSelectedItem().toString().split(" - ")[0];
         String sal = txtLuong.getText().trim();
         String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
 
         // Kiểm tra nếu các trường không được để trống
-        if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || pos.isEmpty() || sal.isEmpty() || deptId.isEmpty()) {
+        if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || posId.isEmpty() || sal.isEmpty() || deptId.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return 0;
         }
@@ -111,7 +129,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         argv[3] = gender;
         argv[4] = email;
         argv[5] = phone;
-        argv[6] = pos;
+        argv[6] = posId.split(" - ")[0];
         argv[7] = sal;
         argv[8] = deptId.split(" - ")[0];
 
@@ -119,7 +137,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             // Tạo kết nối tới cơ sở dữ liệu
             DatabaseHelper cn = new DatabaseHelper();
             // Thực hiện câu truy vấn chèn dữ liệu vào bảng employees
-            int rs = cn.executeQuery("INSERT INTO employees (empId, name, dob, gender, email, phone, pos, sal, deptId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", argv);
+            int rs = cn.executeQuery("INSERT INTO employees (empId, name, dob, gender, email, phone, posId, sal, deptId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", argv);
 
             // Kiểm tra xem dữ liệu đã được chèn thành công chưa
             if (rs > 0) {
@@ -142,12 +160,12 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String gender = boxGT.getSelectedItem().toString();
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
-        String pos = txtChucvu.getText().trim();
+        String posId = boxChucVu.getSelectedItem().toString().split(" - ")[0];
         String sal = txtLuong.getText().trim();
         String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
 
         // Trả về mảng với các giá trị lấy từ giao diện
-        return new String[]{id, name, dob, gender, email, phone, pos, sal, deptId};
+        return new String[]{id, name, dob, gender, email, phone, posId, sal, deptId};
     }
 
     public void updateNhanVien() {
@@ -169,14 +187,14 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             String gender = data[3];
             String email = data[4];
             String phone = data[5];
-            String pos = data[6];
+            String posId = data[6];
             String sal = data[7];
             String deptId = data[8];
 
             DatabaseHelper cn = new DatabaseHelper();
-            Object[] params = {name, dob, gender, email, phone, pos, sal, deptId, id};
+            Object[] params = {name, dob, gender, email, phone, posId, sal, deptId, id};
 
-            int rs = cn.executeQuery("UPDATE employees SET name = ?, dob = ?, gender = ?, email = ?, phone = ?, pos = ?, sal = ?, deptId =? WHERE empId = ?", params);
+            int rs = cn.executeQuery("UPDATE employees SET name = ?, dob = ?, gender = ?, email = ?, phone = ?, posId = ?, sal = ?, deptId =? WHERE empId = ?", params);
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Cập nhật thành công phòng có ID: " + id);
                 clearText();
@@ -231,7 +249,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         boxGT.setSelectedIndex(0);  // Đặt lại ComboBox về giá trị mặc định (Nam)
         txtEmail.setText("");       // Xóa email
         txtPhone.setText("");       // Xóa số điện thoại
-        txtChucvu.setText("");      // Xóa chức vụ
+        boxChucVu.setSelectedIndex(0);      // Xóa chức vụ
         txtLuong.setText("");
         boxPhong.setSelectedIndex(0);
     }
@@ -264,7 +282,6 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         boxGT = new javax.swing.JComboBox<>();
         btThem = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        txtChucvu = new javax.swing.JTextField();
         btUpdate = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -273,6 +290,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         txtLuong = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         boxPhong = new javax.swing.JComboBox<>();
+        boxChucVu = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jscro = new javax.swing.JScrollPane();
         tbNhanvien = new javax.swing.JTable();
@@ -362,6 +380,8 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             }
         });
 
+        boxChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {""}));
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -399,10 +419,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtChucvu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLuong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(boxPhong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtLuong, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                            .addComponent(boxPhong, 0, 101, Short.MAX_VALUE)
+                            .addComponent(boxChucVu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(0, 101, Short.MAX_VALUE)
                         .addComponent(jButton3)
@@ -425,8 +445,8 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6)
                     .addComponent(boxGT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(txtChucvu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(boxChucVu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -501,7 +521,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             String gender = tbNhanvien.getValueAt(i, 3).toString();
             String email = tbNhanvien.getValueAt(i, 4).toString();
             String phone = tbNhanvien.getValueAt(i, 5).toString();
-            String pos = tbNhanvien.getValueAt(i, 6).toString();
+            String posId = tbNhanvien.getValueAt(i, 6).toString();
             String sal = tbNhanvien.getValueAt(i, 7).toString();
             String deptId = tbNhanvien.getValueAt(i, 8).toString();
 
@@ -512,7 +532,13 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             boxGT.setSelectedItem(gender); // Giả sử cbGender là JComboBox cho gender
             txtEmail.setText(email);
             txtPhone.setText(phone);
-            txtChucvu.setText(pos);
+            for (int j = 0; j < boxChucVu.getItemCount(); j++) {
+                String item = boxChucVu.getItemAt(j).toString();
+                if (item.startsWith(posId + " - ")) { // Kiểm tra xem ID có trùng với mục không
+                    boxChucVu.setSelectedIndex(j); // Chọn mục tương ứng
+                    break; // Thoát khỏi vòng lặp sau khi tìm thấy
+                }
+            }
             txtLuong.setText(sal);
             for (int j = 0; j < boxPhong.getItemCount(); j++) {
                 String item = boxPhong.getItemAt(j).toString();
@@ -575,6 +601,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> boxChucVu;
     private javax.swing.JComboBox<String> boxGT;
     private javax.swing.JComboBox<String> boxPhong;
     private javax.swing.JButton btThem;
@@ -595,7 +622,6 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jscro;
     private javax.swing.JTable tbNhanvien;
-    private javax.swing.JTextField txtChucvu;
     private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtId;
