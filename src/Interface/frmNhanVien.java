@@ -347,6 +347,11 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         jLabel2.setText("Lương: ");
 
         jButton3.setText("Tìm Kiếm");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Phòng ban: ");
 
@@ -562,6 +567,11 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIdActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
