@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Interface;
+
 import Proccess.User;
 import javax.swing.JDesktopPane;
+
 /**
  *
  * @author Asus
@@ -18,11 +20,12 @@ public class frmMain extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
+
     public void receiveData(User data) {
         // Xử lý dữ liệu nhận được
         System.out.println("username: " + data.username);
         System.out.println("role: " + data.role);
-         this.jMenuBar1.setVisible(true);
+        this.jMenuBar1.setVisible(true);
     }
 
     /**
@@ -49,6 +52,7 @@ public class frmMain extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -157,6 +161,14 @@ public class frmMain extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem4);
 
+        jMenuItem5.setText("Tính lương");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem5);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -178,11 +190,11 @@ public class frmMain extends javax.swing.JFrame {
     public JDesktopPane getMyDesktop() {
         return myDesktop;
     }
-    
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        frmSignIn frm =new frmSignIn(this);        
-        
+        frmSignIn frm = new frmSignIn(this);
+
         myDesktop.add(frm);
         frm.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -194,7 +206,7 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnSign_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSign_inActionPerformed
         // TODO add your handling code here:
-        frmSignIn frm =new frmSignIn(this);        
+        frmSignIn frm = new frmSignIn(this);
         myDesktop.add(frm);
         frm.setVisible(true);
     }//GEN-LAST:event_btnSign_inActionPerformed
@@ -227,6 +239,13 @@ public class frmMain extends javax.swing.JFrame {
         myDesktop.add(frm);
         frm.setVisible(true);
     }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        frmTinhLuong frm = new frmTinhLuong();
+        myDesktop.add(frm);
+        frm.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -276,6 +295,7 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
