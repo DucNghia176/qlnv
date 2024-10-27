@@ -376,10 +376,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                                    .addComponent(txtDate))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtDate)
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(75, 75, 75)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))))
@@ -417,11 +417,11 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(boxGT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(txtChucvu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtChucvu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -486,30 +486,6 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPhoneActionPerformed
-
-    private void btThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btThemActionPerformed
-        // TODO add your handling code here:
-        insertNhanVien();
-        getNhanVien();
-    }//GEN-LAST:event_btThemActionPerformed
-
-    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIdActionPerformed
-
-    private void boxGTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxGTActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_boxGTActionPerformed
-
-    private void btUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUpdateActionPerformed
-        // TODO add your handling code here:
-        updateNhanVien();
-        getNhanVien();
-    }//GEN-LAST:event_btUpdateActionPerformed
-
     private void tbNhanvienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNhanvienMouseClicked
         // TODO add your handling code here:
         int i = tbNhanvien.getSelectedRow();
@@ -543,25 +519,49 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tbNhanvienMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void boxPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxPhongActionPerformed
         // TODO add your handling code here:
-        getNhanVien();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_boxPhongActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         int confirm = JOptionPane.showConfirmDialog(null,
-                "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận",
-                JOptionPane.YES_NO_OPTION);
+            "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận",
+            JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             deleteNhanVien();
         }
         getNhanVien();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void boxPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxPhongActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_boxPhongActionPerformed
+        getNhanVien();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUpdateActionPerformed
+        // TODO add your handling code here:
+        updateNhanVien();
+        getNhanVien();
+    }//GEN-LAST:event_btUpdateActionPerformed
+
+    private void btThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btThemActionPerformed
+        // TODO add your handling code here:
+        insertNhanVien();
+        getNhanVien();
+    }//GEN-LAST:event_btThemActionPerformed
+
+    private void boxGTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxGTActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_boxGTActionPerformed
+
+    private void txtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPhoneActionPerformed
+
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
