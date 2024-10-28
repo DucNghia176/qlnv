@@ -81,30 +81,32 @@ public class frmTinhLuong extends javax.swing.JInternalFrame {
 
     // Hàm insert
     public int insertTinhLuong() {
-        // Lấy mã nhân viên từ JTextField
+        // Lấy mã lương từ JTextField
+        String payId = txtID.getText().trim(); // Giả sử có trường nhập liệu txtPayId
         String empId = txtIDNhanVien.getText().trim();
         String payDate = txtNgayTraLuong.getText().trim();
         String amount = txtTienLuong.getText().trim();
 
         // Kiểm tra xem các trường nhập liệu có bị bỏ trống không
-        if (empId.isEmpty() || payDate.isEmpty() || amount.isEmpty()) {
+        if (payId.isEmpty() || empId.isEmpty() || payDate.isEmpty() || amount.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return 0;
         }
 
-        // Kiểm tra xem amount có phải là số hợp lệ không
+        // Kiểm tra xem amount và payId có phải là số hợp lệ không
         try {
-            Double.parseDouble(amount); // Chuyển đổi để kiểm tra
+            Integer.parseInt(payId); // Kiểm tra giá trị payId
+            Double.parseDouble(amount); // Kiểm tra giá trị amount
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Số tiền lương không hợp lệ! Vui lòng nhập lại.");
+            JOptionPane.showMessageDialog(null, "Dữ liệu không hợp lệ! Vui lòng kiểm tra lại.");
             return 0;
         }
 
         // Câu lệnh SQL để thêm mới dữ liệu vào bảng payroll
-        Object[] argv = {empId, payDate, amount};
+        Object[] argv = {payId, empId, payDate, amount};
         try {
             DatabaseHelper cn = new DatabaseHelper();
-            int rs = cn.executeQuery("INSERT INTO payroll (empId, payDate, amount) VALUES (?, ?, ?)", argv);
+            int rs = cn.executeQuery("INSERT INTO payroll (payId, empId, payDate, amount) VALUES (?, ?, ?, ?)", argv);
 
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Thêm mới bảng tính lương thành công!");
