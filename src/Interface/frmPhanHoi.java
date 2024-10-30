@@ -16,7 +16,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author MY PC
  */
-
 public class frmPhanHoi extends javax.swing.JInternalFrame {
 
     public void getFeedbackData() {
@@ -51,6 +50,196 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
     public frmPhanHoi() {
         initComponents();
         getFeedbackData();
+    }
+
+    // Hàm insert
+    // Hàm insertFeedback
+    public int insertFeedback() {
+        // Lấy dữ liệu từ JTextField và ComboBox
+        String fbId = txtID.getText().trim(); // Giả sử có trường nhập liệu txtFeedbackID
+        String empId = txtIDNhanVien.getText().trim();
+        String comments = txtPhanHoi.getText().trim();
+        String rating = cbDanhGia.getSelectedItem().toString().trim(); // ComboBox để chọn đánh giá từ 1-5
+
+        // Kiểm tra xem các trường nhập liệu có bị bỏ trống không
+        if (fbId.isEmpty() || empId.isEmpty() || comments.isEmpty() || rating.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
+            return 0;
+        }
+
+        // Kiểm tra xem fbId và rating có phải là số hợp lệ không
+        try {
+            int fbIdValue = Integer.parseInt(fbId); // Kiểm tra giá trị fbId
+            int empIdValue = Integer.parseInt(empId); // Kiểm tra giá trị empId
+            int ratingValue = Integer.parseInt(rating); // Kiểm tra giá trị rating
+            if (ratingValue < 1 || ratingValue > 5) {
+                JOptionPane.showMessageDialog(null, "Đánh giá phải nằm trong khoảng từ 1 đến 5!");
+                return 0;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Dữ liệu không hợp lệ! Vui lòng kiểm tra lại.");
+            return 0;
+        }
+
+        // Câu lệnh SQL để thêm mới dữ liệu vào bảng feedback
+        Object[] argv = {fbId, empId, comments, rating};
+        try {
+            DatabaseHelper cn = new DatabaseHelper();
+            int rs = cn.executeQuery("INSERT INTO feedback (fbId, empId, comments, rating) VALUES (?, ?, ?, ?)", argv);
+
+            if (rs > 0) {
+                JOptionPane.showMessageDialog(null, "Thêm mới phản hồi thành công!");
+                clearFeedbackText(); // Giả định có hàm này để xóa các trường nhập liệu
+            }
+            return rs;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Thêm mới thất bại: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // Phương thức clearFeedbackText để xóa các trường nhập liệu sau khi thêm thành công
+    private void clearFeedbackText() {
+        txtID.setText("");       // Xóa mã phản hồi
+        txtIDNhanVien.setText("");       // Xóa mã nhân viên
+        txtPhanHoi.setText("");         // Xóa nội dung phản hồi
+        cbDanhGia.setSelectedIndex(0); // Đặt lại ComboBox về vị trí đầu tiên
+    }
+
+    // Hàm updateFeedback
+    public int updateFeedback() {
+        // Lấy dữ liệu từ các trường nhập liệu
+        String fbId = txtID.getText().trim();            // Mã phản hồi từ JTextField
+        String empId = txtIDNhanVien.getText().trim();   // Mã nhân viên
+        String comments = txtPhanHoi.getText().trim();   // Nội dung phản hồi
+        String rating = cbDanhGia.getSelectedItem().toString().trim(); // Đánh giá từ ComboBox
+
+        // Kiểm tra xem các trường có rỗng hay không
+        if (fbId.isEmpty() || empId.isEmpty() || comments.isEmpty() || rating.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
+            return 0;
+        }
+
+        // Kiểm tra xem rating có phải là số hợp lệ từ 1 đến 5 không
+        try {
+            int ratingValue = Integer.parseInt(rating);
+            if (ratingValue < 1 || ratingValue > 5) {
+                JOptionPane.showMessageDialog(null, "Đánh giá phải nằm trong khoảng từ 1 đến 5!");
+                return 0;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Đánh giá phải là số!");
+            return 0;
+        }
+
+        // Mảng đối số cho câu truy vấn
+        Object[] argv = {empId, comments, rating, fbId};
+        try {
+            DatabaseHelper cn = new DatabaseHelper();
+            // Câu truy vấn SQL để cập nhật bảng feedback
+            int rs = cn.executeQuery("UPDATE feedback SET empId = ?, comments = ?, rating = ? WHERE fbId = ?", argv);
+
+            if (rs > 0) {
+                JOptionPane.showMessageDialog(null, "Cập nhật phản hồi thành công!");
+                clearFeedbackText(); // Gọi hàm để xóa các trường nhập liệu
+            }
+            return rs;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Cập nhật thất bại: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // Hàm deleteFeedback
+    public int deleteFeedback() {
+        String fbId = txtID.getText().trim(); // Lấy mã phản hồi từ trường nhập liệu
+
+        // Kiểm tra xem mã phản hồi có rỗng hay không
+        if (fbId.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn mã phản hồi để xóa!");
+            return 0;
+        }
+
+        // Xác nhận xóa bản ghi
+        int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa phản hồi này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return 0; // Nếu người dùng không xác nhận, thoát hàm
+        }
+
+        Object[] argv = {fbId}; // Đối số cho câu truy vấn
+        try {
+            DatabaseHelper cn = new DatabaseHelper();
+            // Câu truy vấn SQL để xóa phản hồi
+            int rs = cn.executeQuery("DELETE FROM feedback WHERE fbId = ?", argv);
+
+            if (rs > 0) {
+                JOptionPane.showMessageDialog(null, "Xóa phản hồi thành công!");
+                clearFeedbackText(); // Gọi hàm để xóa các trường nhập liệu
+                getFeedbackData(); // Cập nhật lại bảng dữ liệu
+            }
+            return rs;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Xóa thất bại: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // Hàm searchFeedbackByEmpId
+    public void searchFeedbackByEmpId() {
+        String empId = txtIDNhanVien.getText().trim(); // Lấy mã nhân viên từ trường nhập liệu
+
+        // Kiểm tra xem mã nhân viên có rỗng hay không
+        if (empId.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã nhân viên để tìm kiếm!");
+            return;
+        }
+
+        // Mảng đối số cho câu truy vấn
+        Object[] argv = {empId};
+        try {
+            DatabaseHelper cn = new DatabaseHelper();
+            // Thực hiện truy vấn SQL để tìm kiếm phản hồi theo mã nhân viên
+            ResultSet rs = cn.selectQuery("SELECT * FROM feedback WHERE empId = ?", argv);
+
+            // Xóa dữ liệu cũ trong bảng
+            DefaultTableModel model = (DefaultTableModel) tbPhanHoi.getModel();
+            model.setRowCount(0);
+
+            // Duyệt qua kết quả và thêm vào bảng
+            while (rs.next()) {
+                String fbId = rs.getString("fbId");
+                String empName = getEmployeeNameById(empId); // Hàm giả định lấy tên nhân viên
+                String comments = rs.getString("comments");
+                String rating = rs.getString("rating");
+
+                // Thêm hàng mới vào bảng
+                model.addRow(new Object[]{fbId, empId, empName, comments, rating});
+            }
+
+            // Kiểm tra nếu không tìm thấy kết quả
+            if (model.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy phản hồi nào cho mã nhân viên: " + empId);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Tìm kiếm thất bại: " + e.getMessage());
+        }
+    }
+
+// Hàm giả định lấy tên nhân viên dựa vào mã nhân viên
+    private String getEmployeeNameById(String empId) {
+        try {
+            DatabaseHelper cn = new DatabaseHelper();
+            Object[] argv = {empId};
+            ResultSet rs = cn.selectQuery("SELECT name FROM employees WHERE empId = ?", argv);
+
+            if (rs.next()) {
+                return rs.getString("name");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Không xác định";
     }
 
     /**
@@ -95,10 +284,25 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(txtPhanHoi);
 
         btnAdd.setText("Thêm mới");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Câp nhật");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnRefresh.setText("Làm mới");
 
@@ -106,7 +310,7 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Đánh giá");
 
-        cbDanhGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Nam","Nu"}));
+        cbDanhGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"1","2","3","4","5"}));
 
         tbPhanHoi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -150,38 +354,43 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                    .addComponent(txtIDNhanVien))
-                .addGap(80, 80, 80)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbDanhGia, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(btnAdd)
-                .addGap(74, 74, 74)
-                .addComponent(btnUpdate)
-                .addGap(81, 81, 81)
-                .addComponent(btnDelete)
-                .addGap(87, 87, 87)
-                .addComponent(btnRefresh)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSearch)
-                .addGap(47, 47, 47))
-            .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane2)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                            .addComponent(txtIDNhanVien)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(btnAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addComponent(btnUpdate)
+                        .addGap(9, 9, 9)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbDanhGia, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(btnDelete)
+                        .addGap(70, 70, 70)
+                        .addComponent(btnRefresh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSearch)))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,6 +452,22 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
             cbDanhGia.setSelectedItem(rating);
         }
     }//GEN-LAST:event_tbPhanHoiMouseClicked
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        insertFeedback();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        updateFeedback();
+        getFeedbackData();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        deleteFeedback();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
