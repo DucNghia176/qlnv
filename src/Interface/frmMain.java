@@ -6,6 +6,7 @@ package Interface;
 
 import Proccess.User;
 import javax.swing.JDesktopPane;
+import Interface.frmNhanVien;
 
 /**
  *
