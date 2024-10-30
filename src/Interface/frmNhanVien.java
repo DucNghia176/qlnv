@@ -25,6 +25,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         initComponents();
         getNhanVien();
         loadDepartmentsToComboBox();
+        loadPositions();
     }
 
     public void getNhanVien() {
@@ -84,7 +85,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Lỗi tải dữ liệu phòng: " + e.getMessage());
         }
     }
-    
+
     public void loadPositions() { //lấy ra từ chuc vu
         try {
             DatabaseHelper cn = new DatabaseHelper();
@@ -104,7 +105,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     }
 
     public int insertNhanVien() {
-        // ID is Auto inc
+        // Lấy giá trị từ các trường nhập liệu
         String id = txtId.getText().trim();
         String name = txtName.getText().trim();
         String dob = txtDate.getText().trim();
@@ -116,39 +117,37 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
 
         // Kiểm tra nếu các trường không được để trống
-        if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || posId.isEmpty() || sal.isEmpty() || deptId.isEmpty()) {
+        if (id.isEmpty() || name.isEmpty() || dob.isEmpty() || gender.isEmpty() || email.isEmpty() || phone.isEmpty() || posId.isEmpty() || sal.isEmpty() || deptId.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return 0;
         }
 
+        // Chuẩn bị dữ liệu cho câu lệnh INSERT
         Object[] argv = new Object[9];
-        // Số lượng tham số đúng
-        argv[0] = Integer.parseInt(id);
+        argv[0] = Integer.parseInt(id); // chuyển đổi từ String sang int cho empId
         argv[1] = name;
         argv[2] = dob;
         argv[3] = gender;
         argv[4] = email;
         argv[5] = phone;
-        argv[6] = posId.split(" - ")[0];
+        argv[6] = posId;
         argv[7] = sal;
-        argv[8] = deptId.split(" - ")[0];
+        argv[8] = deptId;
 
         try {
-            // Tạo kết nối tới cơ sở dữ liệu
+            // Kết nối cơ sở dữ liệu và thực hiện chèn dữ liệu
             DatabaseHelper cn = new DatabaseHelper();
-            // Thực hiện câu truy vấn chèn dữ liệu vào bảng employees
             int rs = cn.executeQuery("INSERT INTO employees (empId, name, dob, gender, email, phone, posId, sal, deptId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", argv);
 
-            // Kiểm tra xem dữ liệu đã được chèn thành công chưa
             if (rs > 0) {
                 JOptionPane.showMessageDialog(null, "Thêm mới thành công!");
                 clearText(); // Xóa các trường nhập liệu sau khi thêm thành công
             }
-            return rs; // Trả về số lượng hàng đã chèn
+            return rs;
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Thêm mới thất bại: " + e.getMessage());
-            return 0; // Trả về 0 nếu có lỗi
+            return 0;
         }
     }
 
@@ -196,10 +195,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
             int rs = cn.executeQuery("UPDATE employees SET name = ?, dob = ?, gender = ?, email = ?, phone = ?, posId = ?, sal = ?, deptId =? WHERE empId = ?", params);
             if (rs > 0) {
-                JOptionPane.showMessageDialog(null, "Cập nhật thành công phòng có ID: " + id);
+                JOptionPane.showMessageDialog(null, "Cập nhật thành công nhân viên có ID: " + id);
                 clearText();
             } else {
-                JOptionPane.showMessageDialog(null, "Không tìm thấy phòng với ID: " + id);
+                JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên với ID: " + id);
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "ID không hợp lệ!");
@@ -257,7 +256,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     public frmNhanVien() {
         initComponents();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -557,8 +556,8 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         int confirm = JOptionPane.showConfirmDialog(null,
-            "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận",
-            JOptionPane.YES_NO_OPTION);
+                "Bạn có chắc chắn muốn xóa phòng này?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             deleteNhanVien();
         }
@@ -596,7 +595,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
