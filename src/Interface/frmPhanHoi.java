@@ -80,13 +80,13 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tbPhanHoi = new javax.swing.JTable();
 
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+
         jLabel1.setText("Mã phản hồi");
 
         jLabel2.setText("Mã nhân viên");
-
-        txtID.setText("jTextField1");
-
-        txtIDNhanVien.setText("jTextField2");
 
         jLabel3.setText("Nội dung");
 
@@ -106,7 +106,7 @@ public class frmPhanHoi extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Đánh giá");
 
-        cbDanhGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbDanhGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Nam","Nu"}));
 
         tbPhanHoi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
