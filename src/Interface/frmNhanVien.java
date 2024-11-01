@@ -81,7 +81,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             Object[] argv = new Object[0];
 
             // Thực hiện truy vấn và lấy dữ liệu từ bảng employees
-            try (ResultSet resultSet = cn.selectQuery("SELECT * FROM employees where name like '%"+keys+"%' or  name like N'%"+keys+"%' or gender like N'%"+keys+"%'", argv)) {
+            try (ResultSet resultSet = cn.selectQuery("SELECT * FROM employees where name like '%" + keys + "%' or  name like N'%" + keys + "%' or gender like N'%" + keys + "%'", argv)) {
                 System.out.println("Kết nối OK" + resultSet);
                 while (resultSet.next()) {
                     // Tạo một hàng dữ liệu để thêm vào bảng
@@ -107,7 +107,8 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Lỗi trong quá trình lấy dữ liệu: " + e.getMessage());
         }
     }
-public void getNhanVienByPhongBan(Integer deptId) {
+
+    public void getNhanVienByPhongBan(Integer deptId) {
 
         try {
             // Lấy mô hình (model) của jTable1 và xóa tất cả các hàng hiện tại
@@ -120,7 +121,7 @@ public void getNhanVienByPhongBan(Integer deptId) {
             Object[] argv = new Object[0];
 
             // Thực hiện truy vấn và lấy dữ liệu từ bảng employees
-            try (ResultSet resultSet = cn.selectQuery("SELECT * FROM employees where deptId ="+deptId, argv)) {
+            try (ResultSet resultSet = cn.selectQuery("SELECT * FROM employees where deptId =" + deptId, argv)) {
                 System.out.println("Kết nối OK" + resultSet);
                 while (resultSet.next()) {
                     // Tạo một hàng dữ liệu để thêm vào bảng
@@ -740,7 +741,7 @@ public void getNhanVienByPhongBan(Integer deptId) {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-         String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
+        String deptId = boxPhong.getSelectedItem().toString().split(" - ")[0];
         getNhanVienByPhongBan(Integer.parseInt(deptId));
     }//GEN-LAST:event_jButton4ActionPerformed
 
