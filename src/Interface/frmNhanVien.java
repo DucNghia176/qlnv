@@ -32,7 +32,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
         try {
             // Lấy mô hình (model) của jTable1 và xóa tất cả các hàng hiện tại
-            DefaultTableModel dt = (DefaultTableModel) tbNhanvien.getModel();
+            DefaultTableModel dt = (DefaultTableModel) tbNhanVien.getModel();
             dt.setRowCount(0);
 
             // Tạo kết nối với cơ sở dữ liệu
@@ -106,7 +106,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
     public int insertNhanVien() {
         // Lấy giá trị từ các trường nhập liệu
-        String id = txtId.getText().trim();
+        String id = txtID.getText().trim();
         String name = txtName.getText().trim();
         String dob = txtDate.getText().trim();
         String gender = boxGT.getSelectedItem().toString();
@@ -153,7 +153,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
     private String[] getDataFromUI() {
 
-        String id = txtId.getText().trim();  // Lấy và xóa khoảng trắng đầu/cuối
+        String id = txtID.getText().trim();  // Lấy và xóa khoảng trắng đầu/cuối
         String name = txtName.getText().trim();
         String dob = txtDate.getText().trim();
         String gender = boxGT.getSelectedItem().toString();
@@ -211,7 +211,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
     public int deleteNhanVien() {
         // ID is Auto inc
-        String id = txtId.getText();
+        String id = txtID.getText();
 
         if (id.isEmpty()) { // Kiểm tra xem ID có rỗng không
             JOptionPane.showMessageDialog(null, "Vui lòng nhập mã nhân viên cần xóa!");
@@ -240,9 +240,51 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         }
     }
 
+    public void searchNhanVien() {
+        // Lấy giá trị tìm kiếm từ trường nhập liệu
+        String searchValue = txtID.getText().trim();
+
+        try {
+            // Xóa dữ liệu cũ trong bảng
+            DefaultTableModel dt = (DefaultTableModel) tbNhanVien.getModel();
+            dt.setRowCount(0);
+
+            DatabaseHelper cn = new DatabaseHelper();
+
+            // Câu truy vấn SQL tìm kiếm theo empId hoặc name
+            String query = "SELECT empId, name, dob, gender, email, phone, posId, sal, deptId "
+                    + "FROM employees "
+                    + "WHERE empId LIKE ? OR name LIKE ?";
+
+            // Chuẩn bị các giá trị cho câu truy vấn, sử dụng ký tự `%` cho phép tìm kiếm linh hoạt
+            Object[] argv = {"%" + searchValue + "%", "%" + searchValue + "%"};
+
+            try (ResultSet resultSet = cn.selectQuery(query, argv)) {
+                while (resultSet.next()) {
+                    Vector<Object> v = new Vector<>();
+                    v.add(resultSet.getString("empId"));    // Mã nhân viên
+                    v.add(resultSet.getString("name"));     // Tên nhân viên
+                    v.add(resultSet.getString("dob"));      // Ngày sinh
+                    v.add(resultSet.getString("gender"));   // Giới tính
+                    v.add(resultSet.getString("email"));    // Email
+                    v.add(resultSet.getString("phone"));    // Số điện thoại
+                    v.add(resultSet.getString("posId"));    // Chức vụ
+                    v.add(resultSet.getString("sal"));      // Lương
+                    v.add(resultSet.getString("deptId"));   // Mã phòng ban
+                    dt.addRow(v);  // Thêm dữ liệu vào bảng
+                }
+            }
+
+            cn.close(); // Đóng kết nối sau khi hoàn thành
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi tìm kiếm nhân viên: " + e.getMessage());
+        }
+    }
+
 // Phương thức clearText để xóa các trường nhập liệu
     private void clearText() {
-        txtId.setText("");        // Xóa mã nhân viên
+        txtID.setText("");        // Xóa mã nhân viên
         txtName.setText("");       // Xóa tên nhân viên
         txtDate.setText("");        // Xóa ngày sinh
         boxGT.setSelectedIndex(0);  // Đặt lại ComboBox về giá trị mặc định (Nam)
@@ -269,7 +311,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtId = new javax.swing.JTextField();
+        txtID = new javax.swing.JTextField();
         txtName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txtDate = new javax.swing.JTextField();
@@ -292,7 +334,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         boxChucVu = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jscro = new javax.swing.JScrollPane();
-        tbNhanvien = new javax.swing.JTable();
+        tbNhanVien = new javax.swing.JTable();
 
         setClosable(true);
         setIconifiable(true);
@@ -304,9 +346,9 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Tên nhân viên:");
 
-        txtId.addActionListener(new java.awt.event.ActionListener() {
+        txtID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIdActionPerformed(evt);
+                txtIDActionPerformed(evt);
             }
         });
 
@@ -392,7 +434,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(101, 101, 101)
                                 .addComponent(jLabel6))
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -444,7 +486,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6)
                     .addComponent(boxGT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(boxChucVu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -462,7 +504,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                     .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
                     .addComponent(boxPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btThem)
                     .addComponent(btUpdate)
@@ -472,7 +514,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        tbNhanvien.setModel(new javax.swing.table.DefaultTableModel(
+        tbNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -483,12 +525,12 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                 "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Giới tính", "Email", "Số điện thoại", "Chức vụ", "Lương", "Phòng Ban"
             }
         ));
-        tbNhanvien.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbNhanvienMouseClicked(evt);
+                tbNhanVienMouseClicked(evt);
             }
         });
-        jscro.setViewportView(tbNhanvien);
+        jscro.setViewportView(tbNhanVien);
 
         jScrollPane1.setViewportView(jscro);
 
@@ -510,22 +552,22 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbNhanvienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNhanvienMouseClicked
+    private void tbNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNhanVienMouseClicked
         // TODO add your handling code here:
-        int i = tbNhanvien.getSelectedRow();
-        if (i >= 0 && tbNhanvien.getValueAt(i, 0) != null) {
-            String id = tbNhanvien.getValueAt(i, 0).toString();
-            String name = tbNhanvien.getValueAt(i, 1).toString();
-            String dob = tbNhanvien.getValueAt(i, 2).toString();
-            String gender = tbNhanvien.getValueAt(i, 3).toString();
-            String email = tbNhanvien.getValueAt(i, 4).toString();
-            String phone = tbNhanvien.getValueAt(i, 5).toString();
-            String posId = tbNhanvien.getValueAt(i, 6).toString();
-            String sal = tbNhanvien.getValueAt(i, 7).toString();
-            String deptId = tbNhanvien.getValueAt(i, 8).toString();
+        int i = tbNhanVien.getSelectedRow();
+        if (i >= 0 && tbNhanVien.getValueAt(i, 0) != null) {
+            String id = tbNhanVien.getValueAt(i, 0).toString();
+            String name = tbNhanVien.getValueAt(i, 1).toString();
+            String dob = tbNhanVien.getValueAt(i, 2).toString();
+            String gender = tbNhanVien.getValueAt(i, 3).toString();
+            String email = tbNhanVien.getValueAt(i, 4).toString();
+            String phone = tbNhanVien.getValueAt(i, 5).toString();
+            String posId = tbNhanVien.getValueAt(i, 6).toString();
+            String sal = tbNhanVien.getValueAt(i, 7).toString();
+            String deptId = tbNhanVien.getValueAt(i, 8).toString();
 
             // Cập nhật các trường trong UI
-            txtId.setText(id);
+            txtID.setText(id);
             txtName.setText(name);
             txtDate.setText(dob);
             boxGT.setSelectedItem(gender); // Giả sử cbGender là JComboBox cho gender
@@ -547,7 +589,7 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
                 }
             }
         }
-    }//GEN-LAST:event_tbNhanvienMouseClicked
+    }//GEN-LAST:event_tbNhanVienMouseClicked
 
     private void boxPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxPhongActionPerformed
         // TODO add your handling code here:
@@ -589,12 +631,13 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPhoneActionPerformed
 
-    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtIdActionPerformed
+    }//GEN-LAST:event_txtIDActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        searchNhanVien();
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -620,10 +663,10 @@ public class frmNhanVien extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jscro;
-    private javax.swing.JTable tbNhanvien;
+    private javax.swing.JTable tbNhanVien;
     private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtId;
+    private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtLuong;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPhone;
