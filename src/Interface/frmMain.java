@@ -7,6 +7,7 @@ package Interface;
 import Proccess.User;
 import javax.swing.JDesktopPane;
 import Interface.frmNhanVien;
+import javax.swing.JFrame;
 
 /**
  *
@@ -295,7 +296,9 @@ public class frmMain extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmMain().setVisible(true);
+                frmMain frm = new frmMain();
+                frm.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                frm.setVisible(true);
             }
         });
     }
